@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Netzero IIT Kanpur</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+  const map = L.map('map').setView([26.510, 80.235], 15);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+  }).addTo(map);
+
+  // STP Icon
+  const stpIcon = L.icon({
+    iconUrl: 'images/stp_icon.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+
+  // RWH Icon
+  const rwhIcon = L.icon({
+    iconUrl: 'images/rwh_icon.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+
+  // Solar Icon
+  const solarIcon = L.icon({
+    iconUrl: 'images/solar_icon.png', // Use your uploaded image
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+  });
+
+  const stpLocations = [
+    { coords: [26.509867, 80.241369], name: "SUMP 1", count: 1, capacity: "100 KLD" },
+    { coords: [26.509472, 80.235772], name: "SUMP 2", count: 1, capacity: "100 KLD" },
+    { coords: [26.512111, 80.240056], name: "SUMP 3", count: 1, capacity: "100 KLD" },
+    { coords: [26.515075, 80.235364], name: "SUMP 4", count: 2, capacity: "150 KLD" },
+    { coords: [26.518178, 80.230669], name: "SUMP 6", count: 1, capacity: "100 KLD" },
+    { coords: [26.523344, 80.234731], name: "SUMP 7", count: 1, capacity: "100 KLD" },
+    { coords: [26.503283, 80.227939], name: "SUMP 10", count: 4, capacity: "400 KLD" },
+    { coords: [26.511950, 80.229128], name: "SUMP 11", count: 2, capacity: "200 KLD" },
+    { coords: [26.505517, 80.233875], name: "ETP", count: 1, capacity: "150 KLD" }
+  ];
+
+  const rwhpoints = [
+    { coords: [26.503672, 80.232272], name: "Faculty Apartments- Rainwater Harvesting", tanks: "4" },
+    { coords: [26.504189, 80.232769], name: "New SBRA- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.504944, 80.230305], name: "New Sports Complex- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.508429, 80.231368], name: "Sports Complex- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.505144, 80.234592], name: "Hall 6- Rainwater Harvesting", tanks: "2" },
+    { coords: [26.504900, 80.228350], name: "Hall 8- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.508044, 80.226422], name: "Hall 9- Rainwater Harvesting", tanks: "2" },
+    { coords: [26.506094, 80.226622], name: "Hall 10- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.504825, 80.226458], name: "Hall 11- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.511097, 80.227436], name: "Hall 12- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.510355, 80.226422], name: "Hall 13- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.508311, 80.241250], name: "Type 2 Apartment- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.505186, 80.231833], name: "RA Tower- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.514558, 80.230244], name: "Animal House- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.514264, 80.230433], name: "Mehta Family Building- Rainwater Harvesting", tanks: "1" },
+    { coords: [26.515678, 80.230519], name: "ESB1 - Rainwater Harvesting", tanks: "1" },
+    { coords: [26.516361, 80.231811], name: "Diamond Jubilee Building - Rainwater Harvesting", tanks: "2" },
+    { coords: [26.505722, 80.237172], name: "Type 3 Apartments - Rainwater Harvesting", tanks: "1" }
+  ];
+
+  const solarLocations = [
+    { coords: [26.503672, 80.232272], name: "SERE Building", capacity: "40 kW", type: "Ground Mounted" },
+    { coords: [26.504189, 80.232769], name: "Faculty Building", capacity: "80 kW", type: "Roof Top" },
+    { coords: [26.504944, 80.230305], name: "Western Labs", capacity: "240 kW", type: "Roof Top" },
+    { coords: [26.504112, 80.232140], name: "Visitor's Hostel 2", capacity: "15 kW", type: "Roof Mounted" },
+    { coords: [26.506302, 80.234254], name: "Faculty Apartments C,D", capacity: "50 kW", type: "Roof Top" },
+    { coords: [26.507964, 80.234642], name: "Type 2 Community Centre", capacity: "25 kW", type: "Roof Top" },
+    { coords: [26.510438, 80.234792], name: "New Core Lab", capacity: "200 kW", type: "Roof Top" },
+    { coords: [26.511032, 80.235233], name: "Diamond Jubilee Building", capacity: "150 kW", type: "Roof Top" },
+    { coords: [26.512453, 80.234380], name: "CESE Building", capacity: "50 kW", type: "Roof Top" },
+    { coords: [26.513178, 80.234890], name: "Hall 2", capacity: "60 kW", type: "Roof Top" },
+    { coords: [26.514071, 80.234172], name: "Hall 3", capacity: "80 kW", type: "Roof Top" },
+    { coords: [26.515242, 80.234161], name: "Hall 6", capacity: "70 kW", type: "Roof Top" },
+    { coords: [26.515849, 80.233983], name: "Hall 7", capacity: "175 kW", type: "Roof Top" },
+    { coords: [26.516427, 80.233691], name: "Hall 8", capacity: "255 kW", type: "Roof Top" },
+    { coords: [26.516835, 80.233467], name: "Hall 9", capacity: "225 kW", type: "Roof Top" },
+    { coords: [26.517394, 80.233211], name: "Hall 11", capacity: "95 kW", type: "Roof Top" },
+    { coords: [26.517951, 80.233071], name: "GH1", capacity: "25 kW", type: "Roof Top" },
+    { coords: [26.518198, 80.233333], name: "New RA", capacity: "50 kW", type: "Roof Top" },
+    { coords: [26.518611, 80.233643], name: "Old RA", capacity: "45 kW", type: "Roof Top" },
+    { coords: [26.519052, 80.233695], name: "Visitors Hostel 1", capacity: "50 kW", type: "Roof Top" },
+    { coords: [26.519394, 80.233992], name: "Campus School", capacity: "30 kW", type: "Roof Top" },
+    { coords: [26.520115, 80.234210], name: "Kendriya Vidyalaya", capacity: "50 kW", type: "Roof Top" }
+  ];
+
+  stpLocations.forEach(loc => {
+    L.marker(loc.coords, { icon: stpIcon })
+      .addTo(map)
+      .bindPopup(`<strong>${loc.name}</strong><br/>Capacity: ${loc.capacity}<br/>Count: ${loc.count}`);
+  });
+
+  rwhpoints.forEach(loc => {
+    L.marker(loc.coords, { icon: rwhIcon })
+      .addTo(map)
+      .bindPopup(`<strong>${loc.name}</strong><br/>Tanks: ${loc.tanks}`);
+  });
+
+  solarLocations.forEach(solar => {
+    L.marker(solar.coords, { icon: solarIcon })
+      .addTo(map)
+      .bindPopup(`<strong>${solar.name}</strong><br/>Capacity: ${solar.capacity}<br/>Type: ${solar.type}`);
+  });
+</script>
+
+</body>
+</html>
+
